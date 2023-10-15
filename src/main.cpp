@@ -49,7 +49,7 @@ void setup()
   set_max_power_indicator_LED(LED_BUILTIN);                               // Light the builtin LED if we power throttle
   FastLED.setMaxPowerInMilliWatts(g_PowerLimit);                          // Set the power limit, above which brightness will be throttled
   FastLED.clear();
-  FastLED.show(0);
+  FastLED.show();
 }
 
 void DrawMarqueeComparison()
@@ -75,7 +75,7 @@ void loop()
   while (true)
   {
     //DrawMarqueeComparison();
-    DrawComet(NUM_LEDS);
+    DrawComet(NUM_LEDS-1, NUM_LEDS/2);
     //DrawTwinkle();
     //DrawMarquee();
     //DrawMarqueeMirrored();
@@ -87,6 +87,6 @@ void loop()
     //fire2.DrawFire();   // New DrawFire, second half of string
 
     FastLED.show(g_Brightness);
-    delay(5);
+    delay(25);
   }
 }

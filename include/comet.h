@@ -16,12 +16,10 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
-void DrawComet(int end, int start = 0, byte fadeAmt = 128, int cometSize = 5)
+void DrawComet(int end, int start = 0, byte fadeAmt = 128, int cometSize = 5, CRGB hue1 = CRGB::Red, CRGB hue2 = CRGB::Green)
 {
     end = max(start, end);
-    static CRGB hue1 = AllColors[random(0, ARRAYSIZE(AllColors))];
-    //static CRGB hue1 =  CRGB::Crimson;
-    static CRGB hue2 = CRGB::DarkSeaGreen;
+    //static CRGB hue1 = AllColors[random(0, ARRAYSIZE(AllColors))];
 
     static bool fwd = true;
     static int iPos = start;

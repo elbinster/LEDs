@@ -75,10 +75,11 @@ void loop()
   while (true)
   {
     //DrawMarqueeComparison();
-    //DrawTwinkle(NUM_LEDS/4-1, 0, 40, 16);
-    //DrawMarquee(NUM_LEDS/2, NUM_LEDS/4, 32, false, 8);
-    DrawMarqueeMirrored(NUM_LEDS/2, NUM_LEDS/4, 32, false, 8);
-    //DrawComet(NUM_LEDS-1, NUM_LEDS/2,);
+    DrawTwinkle(1*(NUM_LEDS/4)-1, 0*(NUM_LEDS/4), 40, 16);
+    DrawMarquee(2*(NUM_LEDS/4)-1, 1*(NUM_LEDS/4), 32, false, 8);
+    DrawMarqueeMirrored(3*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), 32, false, 8);
+    //DrawComet(3*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), 64, 3, CRGB::Red, CRGB::Green);
+    DrawComet(4*(NUM_LEDS/4)-1, 3*(NUM_LEDS/4), 64, 3, CRGB::Blue, CRGB::Yellow);
     
     // Fire needs extras
     //static FireEffect fire(50, 0, 20, 100, 9, 4, false, false);

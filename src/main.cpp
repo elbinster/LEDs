@@ -20,23 +20,26 @@
 #include <FastLED.h>
 
 #define NUM_LEDS      200       // FastLED definitions
-#define LED_PIN       12
+#define LED_PIN       12        // Output pin of LED Strip
+#define FPS           60        // Ideal Frames per second
+#define PERIOD        1/FPS     // Ideal delay (doesn't account for processing delay)
 
 CRGB g_LEDs[NUM_LEDS] = {0};    // Frame buffer for FastLED
-static int g_Brightness = 32;
+static int g_Brightness = 128;
 static int g_PowerLimit = 3000;
 
 #include "ledgfx.h"
 #include "comet.h"
 #include "marquee.h"
 #include "twinkle.h"
-#include "fire.h"
-#include "fire2.h"
+#include "fader.h"
+//#include "fire.h"
+//#include "fire2.h"
 //#include "bounce.h"     // Bounce ain't gonna work without a cock
 
-static FireEffect_orig fire(NUM_LEDS-1);
-static FireEffect fire1(NUM_LEDS/3-1, 0, 75, 100, 30, 10, true, false);
-static FireEffect fire2(NUM_LEDS/4, NUM_LEDS/2, 250, 200, 30, 10, false, false);
+//static FireEffect_orig fire(NUM_LEDS-1);
+//static FireEffect fire1(NUM_LEDS/3-1, 0, 75, 100, 30, 10, true, false);
+//static FireEffect fire2(NUM_LEDS/4, NUM_LEDS/2, 250, 200, 30, 10, false, false);
 
 void setup() 
 {
@@ -75,19 +78,21 @@ void loop()
   while (true)
   {
     //DrawMarqueeComparison();
-    DrawTwinkle(1*(NUM_LEDS/4)-1, 0*(NUM_LEDS/4), 40, 16);
-    DrawMarquee(2*(NUM_LEDS/4)-1, 1*(NUM_LEDS/4), 32, false, 8);
-    DrawMarqueeMirrored(3*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), 32, false, 8);
-    //DrawComet(3*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), 64, 3, CRGB::Red, CRGB::Green);
-    DrawComet(4*(NUM_LEDS/4)-1, 3*(NUM_LEDS/4), 64, 3, CRGB::Blue, CRGB::Yellow);
+    //DrawTwinkle(1*(NUM_LEDS/4)-1, 0*(NUM_LEDS/4), 40, 16);
+    //DrawMarquee(2*(NUM_LEDS/4)-1, 1*(NUM_LEDS/4), 32, false, 8);
+    //DrawMarqueeMirrored(3*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), 32, false, 8);
+    //DrawComet(4*(NUM_LEDS/4)-1, 3*(NUM_LEDS/4), 64, 3, CRGB::Purple, CRGB::Green);
+
+    //twinkleHue(2*(NUM_LEDS/4)-1, 0*(NUM_LEDS/4), CRGB::Red, 10, 40, 16);
+    DrawSingleColorFade(4*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), CRGB::Purple, FPS*6);
     
-    // Fire needs extras
+    // Fire needs extras (like a faster processor?)
     //static FireEffect fire(50, 0, 20, 100, 9, 4, false, false);
     //fire.DrawFire();      // Original DrawFire
     //fire1.DrawFire();   // New DrawFire, first half of string
     //fire2.DrawFire();   // New DrawFire, second half of string
 
     FastLED.show(g_Brightness);
-    delay(25);
+    delay(PERIOD);
   }
 }

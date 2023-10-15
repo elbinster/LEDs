@@ -17,8 +17,9 @@
 #include <FastLED.h>
 
 
-void DrawMarquee()
+void DrawMarquee(int end, int start = 0, int hue = 8, bool clear = true, int clearMod = 8)
 {
+    end = max(start, end);
     static byte j = 0;
     j+=4;
     byte k = j;
@@ -26,21 +27,20 @@ void DrawMarquee()
     // Roughly equivalent to fill_rainbow(g_LEDs, NUM_LEDS, j, 8);
 
     CRGB c;
-    for (int i = 0; i < FastLED.size(); i ++)
-        FastLED.leds()[i] = c.setHue(k+=8);
+    for (int i = start; i < end; i ++)
+        FastLED.leds()[i] = c.setHue(k+=hue);
 
-    static int scroll = 0;
+    static int scroll = start;
     scroll++;
 
-    for (int i = scroll % 5; i < FastLED.size() - 1; i += 5)
-    {
-        FastLED.leds()[i] = CRGB::Black;
-    }
-    delay(50);
+    if (clear)
+        for (int i = scroll % clearMod; i < end - 1; i += clearMod)
+            FastLED.leds()[i] = CRGB::Black;
 }
 
-void DrawMarqueeMirrored()
+void DrawMarqueeMirrored(int end, int start = 0, int hue = 8, bool clear = true, int clearMod = 8)
 {
+    end = max(start, end);
     static byte j = 0;
     j+=4;
     byte k = j;
@@ -48,24 +48,23 @@ void DrawMarqueeMirrored()
     // Roughly equivalent to fill_rainbow(g_LEDs, NUM_LEDS, j, 8);
 
     CRGB c;
-    for (int i = 0; i < (FastLED.size() + 1) / 2; i ++)
+    for (int i = start; i < (start + end + 1) / 2; i ++)
     {
         FastLED.leds()[i] = c.setHue(k);
-        FastLED.leds()[FastLED.size() - 1 - i] = c.setHue(k);
-        k+= 8;
+        FastLED.leds()[end - 1 - i] = c.setHue(k);
+        k+= hue;
     }
 
 
-    static int scroll = 0;
+    static int scroll = start;
     scroll++;
 
-    for (int i = scroll % 5; i < FastLED.size() / 2; i += 5)
-    {
-        FastLED.leds()[i] = CRGB::Black;
-        FastLED.leds()[FastLED.size() - 1 - i] = CRGB::Black;
-    }   
-
-    delay(50);
+    if (clear)
+        for (int i = scroll % clearMod; i < end / 2; i += clearMod)
+        {
+            FastLED.leds()[i] = CRGB::Black;
+            FastLED.leds()[end - 1 - i] = CRGB::Black;
+        }   
 }
 
 

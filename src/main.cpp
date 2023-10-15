@@ -75,10 +75,10 @@ void loop()
   while (true)
   {
     //DrawMarqueeComparison();
-    DrawComet(NUM_LEDS-1, NUM_LEDS/2);
-    //DrawTwinkle();
-    //DrawMarquee();
-    //DrawMarqueeMirrored();
+    //DrawTwinkle(NUM_LEDS/4-1, 0, 40, 16);
+    //DrawMarquee(NUM_LEDS/2, NUM_LEDS/4, 32, false, 8);
+    DrawMarqueeMirrored(NUM_LEDS/2, NUM_LEDS/4, 32, false, 8);
+    //DrawComet(NUM_LEDS-1, NUM_LEDS/2,);
     
     // Fire needs extras
     //static FireEffect fire(50, 0, 20, 100, 9, 4, false, false);

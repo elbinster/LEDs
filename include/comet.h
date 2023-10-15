@@ -18,7 +18,7 @@
 
 void DrawComet(int end, int start = 0, byte fadeAmt = 128, int cometSize = 5)
 {
-    //end = min(start, end);
+    end = max(start, end);
     static CRGB hue1 = AllColors[random(0, ARRAYSIZE(AllColors))];
     //static CRGB hue1 =  CRGB::Crimson;
     static CRGB hue2 = CRGB::DarkSeaGreen;

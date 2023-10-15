@@ -31,11 +31,16 @@ static int g_PowerLimit = 1500;
 #include "marquee.h"
 #include "twinkle.h"
 #include "fire.h"
+#include "fire2.h"
 //#include "bounce.h"     // Bounce ain't gonna work without a cock
+
+static FireEffect_orig fire(NUM_LEDS-1);
+static FireEffect fire1(NUM_LEDS/3-1, 0, 75, 100, 30, 10, true, false);
+static FireEffect fire2(NUM_LEDS/4, NUM_LEDS/2, 250, 200, 30, 10, false, false);
 
 void setup() 
 {
-  //Serial.begin(57600);
+  Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
 
@@ -67,20 +72,18 @@ void loop()
   while (true)
   {
     //DrawMarqueeComparison();
-    DrawComet(NUM_LEDS);
+    //DrawComet(NUM_LEDS);
     //DrawTwinkle();
     //DrawMarquee();
     //DrawMarqueeMirrored();
     
     // Fire needs extras
-    //static FireEffect fire(NUM_LEDS-1, 0, 50, 100, 3, NUM_LEDS/3, false, true);
-    //fire.DrawFire();
-    //static FireEffect fire1(NUM_LEDS/3-1, 0, 20, 100, 3, NUM_LEDS/4, false, false);
-    //fire1.DrawFire();
-    //static FireEffect fire2(NUM_LEDS/3-1, NUM_LEDS/2, 20, 50, 10, NUM_LEDS/4, false, false);
-    //fire2.DrawFire();
+    //static FireEffect fire(50, 0, 20, 100, 9, 4, false, false);
+    //fire.DrawFire();      // Original DrawFire
+    //fire1.DrawFire();   // New DrawFire, first half of string
+    fire2.DrawFire();   // New DrawFire, second half of string
 
-    FastLED.show();
-    delay(20);
+    FastLED.show(g_Brightness);
+    //delay(5);
   }
 }

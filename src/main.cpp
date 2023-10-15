@@ -2,7 +2,7 @@
 //
 // NightDriver - (c) 2018 Dave Plummer.  All Rights Reserved.
 //
-// File:        LED Episode 11
+// File:        LED Episode 08
 //
 // Description:
 //
@@ -12,33 +12,65 @@
 //              Oct-05-2020     davepl      Revised for Episode 07
 //              Oct-11-2020     davepl      Revised for Episode 08
 //              Oct-16-2020     davepl      Revised for Episode 09
-//              Oct-23-2020     davepl      Revised for Episode 10
 //---------------------------------------------------------------------------
 
 #include <Arduino.h>            // Arduino Framework
 #define FASTLED_INTERNAL        // Suppress build banner
 #include <FastLED.h>
 
-#define NUM_LEDS      200       // FastLED definitions
-#define LED_PIN       13
+#include "comet.h"
+
+#define NUM_LEDS    200         // FastLED definitions
+#define LED_PIN     13
 
 CRGB g_LEDs[NUM_LEDS] = {0};    // Frame buffer for FastLED
+static int g_Brightness = 8;   // Default Brightness
+static int g_PowerLimit = 900;  // Max Power output
 
-#include "ledgfx.h"
-#include "comet.h"
-#include "marquee.h"
-#include "twinkle.h"
-#include "fire.h"
+#define ARRAYSIZE(x) (sizeof(x)/sizeof(x[0]))
+#define TIMES_PER_SECOND(x) EVERY_N_MILLISECONDS(1000/x)
 
-void setup() 
+// FractionalColor
+//
+// Returns a fraction of a color; abstracts the fadeToBlack out to this function in case we
+// want to improve the color math or do color correction all in one location at a later date.
+
+CRGB ColorFraction(CRGB colorIn, float fraction)
 {
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(LED_PIN, OUTPUT);
+  fraction = min(1.0f, fraction);
+  return CRGB(colorIn).fadeToBlackBy(255 * (1.0f - fraction));
+}
 
-  FastLED.addLeds<WS2812B, LED_PIN, GRB>(g_LEDs, NUM_LEDS);               // Add our LED strip to the FastLED library
-  FastLED.setBrightness(g_Brightness);
-  set_max_power_indicator_LED(LED_BUILTIN);                               // Light the builtin LED if we power throttle
-  FastLED.setMaxPowerInMilliWatts(g_PowerLimit);                          // Set the power limit, above which brightness will be throttled
+void DrawPixels(float fPos, float count, CRGB color)
+{
+  // Calculate how much the first pixel will hold
+  float availFirstPixel = 1.0f - (fPos - (long)(fPos));
+  float amtFirstPixel = min(availFirstPixel, count);
+  float remaining = min(count, FastLED.size()-fPos);
+  int iPos = fPos;
+
+  // Blend (add) in the color of the first partial pixel
+
+  if (remaining > 0.0f)
+  {
+    FastLED.leds()[iPos++] += ColorFraction(color, amtFirstPixel);
+    remaining -= amtFirstPixel;
+  }
+
+  // Now draw any full pixels in the middle
+
+  while (remaining > 1.0f)
+  {
+    FastLED.leds()[iPos++] += color;
+    remaining--;
+  }
+
+  // Draw tail pixel, up to a single full pixel
+
+  if (remaining > 0.0f)
+  {
+    FastLED.leds()[iPos] += ColorFraction(color, remaining);
+  }
 }
 
 void DrawMarqueeComparison()
@@ -55,143 +87,29 @@ void DrawMarqueeComparison()
   }
 }
 
-void loop() 
+
+void setup()
+{
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(LED_PIN, OUTPUT);
+
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(g_LEDs, NUM_LEDS);               // Add our LED strip to the FastLED library
+  FastLED.setBrightness(g_Brightness);
+  set_max_power_indicator_LED(LED_BUILTIN);                               // Light the builtin LED if we power throttle
+  FastLED.setMaxPowerInMilliWatts(g_PowerLimit);                          // Set the power limit, above which brightness will be throttled
+}
+
+void loop()
 {
   bool bLED = 0;
 
   while (true)
   {
     FastLED.clear();
+    // Draw here
+    DrawComet();
 
-    /*
-    // RGB Spinners
-    float b = beat16(60) / 65535.0f * FAN_SIZE;
-    DrawFanPixels(b, 1, CRGB::Red,   Sequential,  0);
-    DrawFanPixels(b, 1, CRGB::Green, Sequential,  1);
-    DrawFanPixels(b, 1, CRGB::Blue,  Sequential,  2);
-    */
-
-    /*
-    // Left to Right Cyan Wipe
-    float b = beatsin16(60) / 65535.0f * FAN_SIZE;
-    for (int iFan = 0; iFan < NUM_FANS; iFan++)
-      DrawFanPixels(0, b, CRGB::Cyan, LeftRight, iFan);
-    */
-
-    /* Right to Left Cyan Wipe
-    float b = beatsin16(60) / 65535.0f * FAN_SIZE;
-    for (int iFan = 0; iFan < NUM_FANS; iFan++)
-      DrawFanPixels(0, b, CRGB::Cyan, RightLeft, iFan);
-    */
-
-    /*
-    // Bottom Up Green Wipe
-    float b = beatsin16(60) / 65535.0f * NUM_LEDS;
-      DrawFanPixels(0, b, CRGB::Green, BottomUp);
-    */
-
-    /*
-    // Top Down Green Wipe
-    float b = beatsin16(60) / 65535.0f * NUM_LEDS;
-        DrawFanPixels(0, b, CRGB::Green, TopDown);    
-    */
-
-    /*
-    // Simple Color Cycle
-    static byte hue = 0;
-    for (int i = 0; i < NUM_LEDS; i++)
-      DrawFanPixels(i, 1, CHSV(hue, 255, 255));
-    hue += 4;
-    */
-
-    /*
-    // Sequential Color Rainbows
-    static byte basehue = 0;
-    byte hue = basehue;
-    basehue += 4;
-    for (int i = 0; i < NUM_LEDS; i++)
-      DrawFanPixels(i, 1, CHSV(hue+=16, 255, 255));
-    basehue += 4;
-    */
-
-    /*
-    // Vertical Rainbow Wipe
-    static byte basehue = 0;
-    byte hue = basehue;
-    basehue += 8;
-    for (int i = 0; i < NUM_LEDS; i++)
-      DrawFanPixels(i, 1, CHSV(hue+=16, 255, 255), LeftRight);
-    */
-
-    /*
-    static byte basehue = 0;
-    byte hue = basehue;
-    basehue += 8;
-    for (int i = 0; i < NUM_LEDS; i++)
-      DrawFanPixels(i, 1, CHSV(hue+=16, 255, 255), BottomUp);
-    */
-
-    /*
-    // Rainbow Strip Palette Effect
-    static CRGBPalette256 pal(RainbowStripeColors_p);
-    static byte baseColor = 0;
-    byte hue = baseColor;
-    for (int i = 0; i < NUM_LEDS; i++)
-      DrawFanPixels(i, 1, ColorFromPalette(pal, hue += 4), BottomUp);
-    baseColor += 1;
-    */
-
-    /*
-    // vu-style Meter bar
-    int b = beatsin16(30) * NUM_LEDS / 65535L;
-    static const CRGBPalette256 vuPaletteGreen = vu_gpGreen;
-    for (int i = 0; i < b; i++)
-      DrawFanPixels(i, 1, ColorFromPalette(vuPaletteGreen, (int)(255 * i / NUM_LEDS)), BottomUp);
-    */
-
-    /*
-    // Sequential Fire Fans
-    static FireEffect fire(NUM_LEDS, 20, 100, 3, NUM_LEDS, true, false);
-    fire.DrawFire();
-    */
-
-    /*
-    // Bottom Up Fire Effect with extra sparking on first fan only
-    static FireEffect fire(NUM_LEDS, 20, 140, 3, FAN_SIZE, true, false);
-    fire.DrawFire(BottomUp);
-    */
-
-    // LeftRight (Wide Style) Fire Effect with extra sparking on first fan only
-
-    /*
-    static FireEffect fire(NUM_LEDS, 20, 140, 3, FAN_SIZE, true, false);
-    fire.DrawFire(LeftRight);
-    for (int i = 0; i < FAN_SIZE; i++)
-    {
-      g_LEDs[i] = g_LEDs[i + 2 * FAN_SIZE];
-      g_LEDs[i + FAN_SIZE] = g_LEDs[i + 2 * FAN_SIZE];
-    }
-    */
-
-   int b = beatsin16(30) * NUM_LEDS / 65535L;
-   static const CRGBPalette256 seahawksPalette = gpSeahawks;
-   for (int i = 0; i < NUM_LEDS; i++)
-      DrawFanPixels(i, 1, ColorFromPalette(seahawksPalette, beat8(64) + (int)(255 * i / NUM_LEDS)), BottomUp);
-  
-
-    FastLED.show(g_Brightness);                          //  Show and delay
-
-    EVERY_N_MILLISECONDS(250)
-    {
-      g_OLED.clearBuffer();
-      g_OLED.setCursor(0, g_lineHeight);
-      g_OLED.printf("FPS  : %u", FastLED.getFPS());
-      g_OLED.setCursor(0, g_lineHeight * 2);
-      g_OLED.printf("Power: %u mW", calculate_unscaled_power_mW(g_LEDs, 4));
-      g_OLED.setCursor(0, g_lineHeight * 3);
-      g_OLED.printf("Brite: %d", calculate_max_brightness_for_power_mW(g_Brightness, g_PowerLimit));
-      g_OLED.sendBuffer();
-    }
-    delay(33);
+    FastLED.setBrightness(g_Brightness);        //  Set the brightness scale
+    FastLED.delay(33);                          //  Show and delay
   }
 }

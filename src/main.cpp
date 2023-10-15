@@ -23,8 +23,8 @@
 #define LED_PIN       12
 
 CRGB g_LEDs[NUM_LEDS] = {0};    // Frame buffer for FastLED
-static int g_Brightness = 200;
-static int g_PowerLimit = 1500;
+static int g_Brightness = 32;
+static int g_PowerLimit = 3000;
 
 #include "ledgfx.h"
 #include "comet.h"
@@ -54,15 +54,18 @@ void setup()
 
 void DrawMarqueeComparison()
 {
+  FastLED.clear();
   static float scroll = 0.0f;
   scroll += 0.1f;
   if (scroll > 5.0)
     scroll -= 5.0;
 
-  for (float i = scroll; i < NUM_LEDS/2 -1; i+= 5)
+  static CRGB color1 = AllColors[random(0, ARRAYSIZE(AllColors))];
+  static CRGB color2 = AllColors[random(0, ARRAYSIZE(AllColors))];
+  for (float i = scroll; i < NUM_LEDS/2 - 1; i+= 5)
   {
-    DrawPixels(i, 3, CRGB::DarkGoldenrod);
-    DrawPixels(NUM_LEDS-2-(int)i, 3, CRGB::Amethyst);
+    DrawPixels(NUM_LEDS-1-i, 3, color1);
+    DrawPixels((int)i, 3, color2);
   }
 }
 
@@ -72,7 +75,7 @@ void loop()
   while (true)
   {
     //DrawMarqueeComparison();
-    //DrawComet(NUM_LEDS);
+    DrawComet(NUM_LEDS);
     //DrawTwinkle();
     //DrawMarquee();
     //DrawMarqueeMirrored();
@@ -81,9 +84,9 @@ void loop()
     //static FireEffect fire(50, 0, 20, 100, 9, 4, false, false);
     //fire.DrawFire();      // Original DrawFire
     //fire1.DrawFire();   // New DrawFire, first half of string
-    fire2.DrawFire();   // New DrawFire, second half of string
+    //fire2.DrawFire();   // New DrawFire, second half of string
 
     FastLED.show(g_Brightness);
-    //delay(5);
+    delay(5);
   }
 }

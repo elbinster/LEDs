@@ -21,9 +21,9 @@ void DrawComet(int num)
     const byte fadeAmt = 128;
     const int cometSize = 5;
 
-    //static byte hue1 = random(0, ARRAYSIZE(AllColors));
-    static CRGB hue1 =  CRGB::Crimson;
-    static CRGB hue2 = CRGB::DarkOliveGreen;
+    static CRGB hue1 = AllColors[random(0, ARRAYSIZE(AllColors))];
+    //static CRGB hue1 =  CRGB::Crimson;
+    static CRGB hue2 = CRGB::DarkSeaGreen;
 
     static bool fwd = true;
     static int iPos = 0;

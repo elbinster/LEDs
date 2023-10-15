@@ -98,7 +98,7 @@ class FireEffect
         {
             CRGB color = HeatColor(heat[i]);
             int j = bReversed ? (Size+Start-i) : i;
-            DrawPixels(i, 1, color);
+            DrawPixels(j, 1, color);
             if (bMirrored)
             {
                 uint8_t pixelToDraw = !bReversed ? (2 * (Start+Size) - 1 - i) : Size + i;

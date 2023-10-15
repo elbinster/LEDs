@@ -26,13 +26,13 @@ void DrawMarquee()
     // Roughly equivalent to fill_rainbow(g_LEDs, NUM_LEDS, j, 8);
 
     CRGB c;
-    for (int i = 0; i < FastLED.count(); i ++)
+    for (int i = 0; i < FastLED.size(); i ++)
         FastLED.leds()[i] = c.setHue(k+=8);
 
     static int scroll = 0;
     scroll++;
 
-    for (int i = scroll % 5; i < FastLED.count() - 1; i += 5)
+    for (int i = scroll % 5; i < FastLED.size() - 1; i += 5)
     {
         FastLED.leds()[i] = CRGB::Black;
     }
@@ -48,10 +48,10 @@ void DrawMarqueeMirrored()
     // Roughly equivalent to fill_rainbow(g_LEDs, NUM_LEDS, j, 8);
 
     CRGB c;
-    for (int i = 0; i < (FastLED.count() + 1) / 2; i ++)
+    for (int i = 0; i < (FastLED.size() + 1) / 2; i ++)
     {
         FastLED.leds()[i] = c.setHue(k);
-        FastLED.leds()[FastLED.count() - 1 - i] = c.setHue(k);
+        FastLED.leds()[FastLED.size() - 1 - i] = c.setHue(k);
         k+= 8;
     }
 
@@ -59,10 +59,10 @@ void DrawMarqueeMirrored()
     static int scroll = 0;
     scroll++;
 
-    for (int i = scroll % 5; i < FastLED.count() / 2; i += 5)
+    for (int i = scroll % 5; i < FastLED.size() / 2; i += 5)
     {
         FastLED.leds()[i] = CRGB::Black;
-        FastLED.leds()[FastLED.count() - 1 - i] = CRGB::Black;
+        FastLED.leds()[FastLED.size() - 1 - i] = CRGB::Black;
     }   
 
     delay(50);

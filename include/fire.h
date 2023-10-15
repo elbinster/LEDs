@@ -20,6 +20,7 @@ class FireEffect
 {
   protected:
     int     Size;               // How many pixels the flame is total
+    int     Start;              // Where the flame starts in the string
     int     Cooling;            // Rate at which the pixels cool off
     int     Sparks;             // How many sparks will be attempted each frame
     int     SparkHeight;        // If created, max height for a spark
@@ -40,8 +41,9 @@ class FireEffect
 
   public:
 
-    FireEffect(int size, int cooling = 20, int sparking = 100, int sparks = 3, int sparkHeight = 4, bool breversed = true, bool bmirrored = true)
+    FireEffect(int size, int start, int cooling = 20, int sparking = 100, int sparks = 3, int sparkHeight = 4, bool breversed = true, bool bmirrored = true)
         : Size(size),
+          Start(start),
           Cooling(cooling),
           Sparks(sparks),
           SparkHeight(sparkHeight),
@@ -63,11 +65,11 @@ class FireEffect
     virtual void DrawFire(PixelOrder order = Sequential)
     {
         // First cool each cell by a litle bit
-        for (int i = 0; i < Size; i++)
+        for (int i = Start; i < (Start+Size); i++)
             heat[i] = max(0L, heat[i] - random(0, ((Cooling * 10) / Size) + 2));
 
         // Next drift heat up and diffuse it a little bit
-        for (int i = 0; i < Size; i++)
+        for (int i = Start; i < (Start+Size); i++)
             heat[i] = (heat[i] * BlendSelf +
                        heat[(i + 1) % Size] * BlendNeighbor1 +
                        heat[(i + 2) % Size] * BlendNeighbor2 +
@@ -80,17 +82,17 @@ class FireEffect
         {
             if (random(255) < Sparking)
             {
-                int y = Size - 1 - random(SparkHeight);
+                int y = (Start+Size) - 1 - random(SparkHeight);
                 heat[y] = heat[y] + random(160, 255);       // Can roll over which actually looks good!
             }
         }
 
         // Finally, convert heat to a color
 
-        for (int i = 0; i < Size; i++)
+        for (int i = Start; i < (Start+Size); i++)
         {
             CRGB color = HeatColor(heat[i]);
-            int j = bReversed ? (Size - 1 - i) : i;
+            int j = bReversed ? (Start + Size - 1 - i) : i;
             DrawFanPixels(j, 1, color, order);
             if (bMirrored)
                 DrawFanPixels(!bReversed ? (2 * Size - 1 - i) : Size + i, 1, color, order);

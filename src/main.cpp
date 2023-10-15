@@ -31,6 +31,7 @@ static int g_PowerLimit = 1500;
 #include "marquee.h"
 #include "twinkle.h"
 #include "fire.h"
+//#include "bounce.h"     // Bounce ain't gonna work without a cock
 
 void setup() 
 {
@@ -43,6 +44,7 @@ void setup()
   set_max_power_indicator_LED(LED_BUILTIN);                               // Light the builtin LED if we power throttle
   FastLED.setMaxPowerInMilliWatts(g_PowerLimit);                          // Set the power limit, above which brightness will be throttled
   FastLED.clear();
+  FastLED.show(0);
 }
 
 void DrawMarqueeComparison()
@@ -64,13 +66,21 @@ void loop()
 
   while (true)
   {
-    FastLED.clear();
     //DrawMarqueeComparison();
-    //DrawComet();
-    DrawTwinkle();
-
+    DrawComet(NUM_LEDS);
+    //DrawTwinkle();
+    //DrawMarquee();
+    //DrawMarqueeMirrored();
+    
+    // Fire needs extras
+    //static FireEffect fire(NUM_LEDS-1, 0, 50, 100, 3, NUM_LEDS/3, false, true);
+    //fire.DrawFire();
+    //static FireEffect fire1(NUM_LEDS/3-1, 0, 20, 100, 3, NUM_LEDS/4, false, false);
+    //fire1.DrawFire();
+    //static FireEffect fire2(NUM_LEDS/3-1, NUM_LEDS/2, 20, 50, 10, NUM_LEDS/4, false, false);
+    //fire2.DrawFire();
 
     FastLED.show();
-    delay(25);
+    delay(20);
   }
 }

@@ -16,19 +16,21 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
-void DrawComet()
+void DrawComet(int num)
 {
-    const byte fadeAmt = 2;
+    const byte fadeAmt = 128;
     const int cometSize = 5;
 
-    static byte hue1 = HUE_PURPLE;
-    static byte hue2 = HUE_GREEN;
+    //static byte hue1 = random(0, ARRAYSIZE(AllColors));
+    static CRGB hue1 =  CRGB::Crimson;
+    static CRGB hue2 = CRGB::DarkOliveGreen;
+
     static bool fwd = true;
     static int iPos = 0;
 
     if (iPos <= 0)
         fwd = true;
-    if (iPos + cometSize >= FastLED.size())
+    if (iPos + cometSize >= num)
         fwd = false;
     
     if (fwd)
@@ -39,15 +41,16 @@ void DrawComet()
     for (int i = 0; i < cometSize; i++)
     {
         if (fwd)
-            FastLED.leds()[iPos+i].setHue(hue1);
-        if (!fwd)
-            FastLED.leds()[iPos+i].setHue(hue2);
+            FastLED.leds()[iPos+i] = hue1;
+        else
+            FastLED.leds()[iPos+i] = hue2;
     }
 
     // Randomly fade the LEDs
-    for (int j = 0; j < FastLED.size(); j++)
-        if (random(10) > 3)
-            FastLED.leds()[j] = FastLED.leds()[j].fadeToBlackBy(fadeAmt);
+    for (int j = 0; j < num; j++)
+        if (random(10) > 5)
+            //FastLED.leds()[j] = FastLED.leds()[j].fadeToBlackBy(255-fadeAmt);     // Looks cool with max fade
+            FastLED.leds()[j].fadeToBlackBy(fadeAmt);
 
-    delay(10);
+    //delay(10);
 }

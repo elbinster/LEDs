@@ -18,27 +18,36 @@
 
 void DrawComet()
 {
-    const byte fadeAmt = 128;
+    const byte fadeAmt = 2;
     const int cometSize = 5;
-    const int deltaHue  = 4;
 
-    static byte hue = HUE_RED;
-    static int iDirection = 1;
+    static byte hue1 = HUE_PURPLE;
+    static byte hue2 = HUE_GREEN;
+    static bool fwd = true;
     static int iPos = 0;
 
-    hue += deltaHue;
-
-    iPos += iDirection;
-    if (iPos == (FastLED.count() - cometSize) || iPos == 0)
-        iDirection *= -1;
+    if (iPos <= 0)
+        fwd = true;
+    if (iPos + cometSize >= FastLED.size())
+        fwd = false;
+    
+    if (fwd)
+        iPos++;
+    if (!fwd)
+        iPos--;
     
     for (int i = 0; i < cometSize; i++)
-        FastLED.leds()[iPos + i].setHue(hue);
-    
-    // Randomly fade the LEDs
-    for (int j = 0; j < FastLED.count(); j++)
-        if (random(10) > 5)
-            FastLED.leds()[j] = FastLED.leds()[j].fadeToBlackBy(fadeAmt);  
+    {
+        if (fwd)
+            FastLED.leds()[iPos+i].setHue(hue1);
+        if (!fwd)
+            FastLED.leds()[iPos+i].setHue(hue2);
+    }
 
-    delay(30);
+    // Randomly fade the LEDs
+    for (int j = 0; j < FastLED.size(); j++)
+        if (random(10) > 3)
+            FastLED.leds()[j] = FastLED.leds()[j].fadeToBlackBy(fadeAmt);
+
+    delay(10);
 }

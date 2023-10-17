@@ -44,5 +44,5 @@ void DrawComet(CRGBSet leds, byte fadeAmt = 128, int cometSize = 5, CRGB hue1 = 
         if (random(10) > 5)
             //leds[j] = leds[j].fadeToBlackBy(255-fadeAmt);     // Looks cool with max fade
             leds[j].fadeToBlackBy(fadeAmt);
-    delay(10);
+    delay(30);
 }

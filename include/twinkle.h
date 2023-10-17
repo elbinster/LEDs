@@ -63,8 +63,14 @@ void twinkleBlur(CRGBSet leds, CRGB hue = CRGB::DarkOrange, uint8_t passes = 5, 
         passCount = 0;
         for (int i = 0; i < numLeds; i++)
         {
-            if (random(100) > 50) {
+            // random blur (do this more)
+            if (random(100) > 75) {
                 blur1d(leds, numLeds, fadeAmt);
+                blur1d(leds, numLeds, fadeAmt);
+                blur1d(leds, numLeds, fadeAmt);
+            }
+            // random fade to black
+            if (random(100) > 50) {
                 leds[i].fadeToBlackBy(fadeAmt/2);
             }
         }

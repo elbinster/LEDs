@@ -33,10 +33,16 @@ void DrawTwoColorFade(CRGBSet leds, CRGB color1 = CRGB::Blue, CRGB color2 = CRGB
     static uint8_t numLeds = leds.len;
     static uint8_t minVal = 0;
     static uint8_t maxVal = 255;
+    static uint8_t lastVal = 0;
+    static bool up = false;
     uint8_t fader = beatsin8(bpm, minVal, maxVal, 0, 0);
     Serial.println(fader);
-    if (fader <= minVal + 2)        // Doesn't reliably hit the min
+    if ((lastVal-fader < 0) && !up) {        // Doesn't reliably hit the min, but will flip twice if too high.
         colorOne = !colorOne;
+        up = true;
+    }
+    if ((lastVal-fader > 0) && up)
+        up = false;
     for (int i = 0; i < numLeds; i ++)
     {
         if (colorOne) {
@@ -46,4 +52,5 @@ void DrawTwoColorFade(CRGBSet leds, CRGB color1 = CRGB::Blue, CRGB color2 = CRGB
         }
         leds[i].nscale8(fader);
     }
+    lastVal = fader;
 }

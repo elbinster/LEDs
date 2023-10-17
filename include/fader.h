@@ -16,41 +16,34 @@
 #define FASTLED_INTERNAL
 #include <FastLED.h>
 
-
-void DrawSingleColorFade(int end, int start = 0, CRGB color = CRGB::Blue, uint16_t steps = 100)
-{
-    end = max(start, end);
-
-    static uint16_t step = steps;
-    static bool up = false;
-
-    if (step >= steps)
-    {
-        up = !up;
-        Serial.println("RESET");
-        step = 0;
-    }
+void DrawSingleColorFade(CRGBSet leds, CRGB color = CRGB::Red, uint8_t bpm = 60) {
     
-    float fSteps = steps;
-    float fadeAmt = 255/(fSteps-1);
-    float ratio = fadeAmt*step;
-    
-    if (!up)
+    static uint8_t numLeds = leds.len;
+    uint8_t fader = beatsin8(bpm, 0, 255, 0, 0);
+    for (int i = 0; i < numLeds; i ++)
     {
-        ratio = 255 - ratio;
-    } else
-        ratio = brighten8_raw(ratio);
-    Serial.print(step);
-    Serial.print(" ");
-    Serial.println(ratio);
-    for (int i = start; i < end; i ++)
-    {
-        if (up)
-            FastLED.leds()[i] = color;
-        FastLED.leds()[i].nscale8(ratio);
+        leds[i] = color;
+        leds[i].nscale8(fader);
     }
-    step++;
 }
 
+void DrawTwoColorFade(CRGBSet leds, CRGB color1 = CRGB::Blue, CRGB color2 = CRGB::Red, uint8_t bpm = 60) {
 
-
+    static bool colorOne = false;
+    static uint8_t numLeds = leds.len;
+    static uint8_t minVal = 0;
+    static uint8_t maxVal = 255;
+    uint8_t fader = beatsin8(bpm, minVal, maxVal, 0, 0);
+    Serial.println(fader);
+    if (fader <= minVal + 2)        // Doesn't reliably hit the min
+        colorOne = !colorOne;
+    for (int i = 0; i < numLeds; i ++)
+    {
+        if (colorOne) {
+            leds[i] = color1;
+        } else {
+            leds[i] = color2;
+        }
+        leds[i].nscale8(fader);
+    }
+}

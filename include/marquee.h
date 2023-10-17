@@ -17,9 +17,9 @@
 #include <FastLED.h>
 
 
-void DrawMarquee(int end, int start = 0, int hue = 8, bool clear = true, int clearMod = 8)
+void DrawMarquee(CRGBSet leds, int hue = 8, bool clear = true, int clearMod = 8)
 {
-    end = max(start, end);
+    static uint8_t numLeds = leds.len;
     static byte j = 0;
     j+=4;
     byte k = j;
@@ -27,20 +27,20 @@ void DrawMarquee(int end, int start = 0, int hue = 8, bool clear = true, int cle
     // Roughly equivalent to fill_rainbow(g_LEDs, NUM_LEDS, j, 8);
 
     CRGB c;
-    for (int i = start; i < end; i ++)
-        FastLED.leds()[i] = c.setHue(k+=hue);
+    for (int i = 0; i < numLeds; i ++)
+        leds[i] = c.setHue(k += hue);
 
-    static int scroll = start;
+    static int scroll = 0;
     scroll++;
 
     if (clear)
-        for (int i = scroll % clearMod; i < end - 1; i += clearMod)
-            FastLED.leds()[i] = CRGB::Black;
+        for (int i = scroll % clearMod; i < numLeds - 1; i += clearMod)
+            leds[i] = CRGB::Black;
 }
 
-void DrawMarqueeMirrored(int end, int start = 0, int hue = 8, bool clear = true, int clearMod = 8)
+void DrawMarqueeMirrored(CRGBSet leds, int hue = 8, bool clear = true, int clearMod = 8)
 {
-    end = max(start, end);
+    static uint8_t numLeds = leds.len;
     static byte j = 0;
     j+=4;
     byte k = j;
@@ -48,22 +48,22 @@ void DrawMarqueeMirrored(int end, int start = 0, int hue = 8, bool clear = true,
     // Roughly equivalent to fill_rainbow(g_LEDs, NUM_LEDS, j, 8);
 
     CRGB c;
-    for (int i = start; i < (start + end + 1) / 2; i ++)
+    for (int i = 0; i < (numLeds) / 2; i ++)
     {
-        FastLED.leds()[i] = c.setHue(k);
-        FastLED.leds()[end - 1 - i] = c.setHue(k);
-        k+= hue;
+        leds[i] = c.setHue(k);
+        leds[numLeds - 1 - i] = c.setHue(k);
+        k += hue;
     }
 
 
-    static int scroll = start;
+    static int scroll = 0;
     scroll++;
 
     if (clear)
-        for (int i = scroll % clearMod; i < end / 2; i += clearMod)
+        for (int i = scroll % clearMod; i < numLeds / 2; i += clearMod)
         {
-            FastLED.leds()[i] = CRGB::Black;
-            FastLED.leds()[end - 1 - i] = CRGB::Black;
+            leds[i] = CRGB::Black;
+            leds[numLeds - 1 - i] = CRGB::Black;
         }   
 }
 

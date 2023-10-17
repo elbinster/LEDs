@@ -25,6 +25,11 @@
 #define PERIOD        1/FPS     // Ideal delay (doesn't account for processing delay)
 
 CRGB g_LEDs[NUM_LEDS] = {0};    // Frame buffer for FastLED
+CRGBSet all_leds(g_LEDs, NUM_LEDS);
+CRGBSet first_leds(all_leds(0*(NUM_LEDS/4), (NUM_LEDS/4)-1));
+CRGBSet second_leds(all_leds(1*(NUM_LEDS/4), 2*(NUM_LEDS/4)-1));
+CRGBSet third_leds(all_leds(3*(NUM_LEDS/4), 4*(NUM_LEDS/4)-1));
+
 static int g_Brightness = 128;
 static int g_PowerLimit = 3000;
 
@@ -77,14 +82,16 @@ void loop()
 
   while (true)
   {
+    EVERY_N_MILLISECONDS(PERIOD)
+    {
     //DrawMarqueeComparison();
-    //DrawTwinkle(1*(NUM_LEDS/4)-1, 0*(NUM_LEDS/4), 40, 16);
-    //DrawMarquee(2*(NUM_LEDS/4)-1, 1*(NUM_LEDS/4), 32, false, 8);
-    //DrawMarqueeMirrored(3*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), 32, false, 8);
-    //DrawComet(4*(NUM_LEDS/4)-1, 3*(NUM_LEDS/4), 64, 3, CRGB::Purple, CRGB::Green);
+    //DrawTwinkle(third_leds, 40, 16);
+    //DrawMarquee(third_leds, 32, false, 8);
+    //DrawMarqueeMirrored(first_leds, 32, false, 8);
+    //DrawComet(first_leds, 64, 3, CRGB::Orange, CRGB::Green);
 
-    //twinkleHue(2*(NUM_LEDS/4)-1, 0*(NUM_LEDS/4), CRGB::Red, 10, 40, 16);
-    DrawSingleColorFade(4*(NUM_LEDS/4)-1, 2*(NUM_LEDS/4), CRGB::Purple, FPS*6);
+    //twinkleHue(second_leds, CRGB::Green, 10, 40, 16);
+    //DrawSingleColorFade(second_leds, CRGB::Purple, 20);
     
     // Fire needs extras (like a faster processor?)
     //static FireEffect fire(50, 0, 20, 100, 9, 4, false, false);
@@ -92,7 +99,14 @@ void loop()
     //fire1.DrawFire();   // New DrawFire, first half of string
     //fire2.DrawFire();   // New DrawFire, second half of string
 
+
+    // Final Halloween Setup
+
+    DrawComet(first_leds, 64, 3, CRGB::Orange, CRGB::OrangeRed);
+    DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::Green, 30);
+    twinkleBlur(third_leds, CRGB::Green, 4, 16);
+    }
     FastLED.show(g_Brightness);
-    delay(PERIOD);
+    //delay(PERIOD);
   }
 }

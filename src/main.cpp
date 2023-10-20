@@ -18,6 +18,13 @@
 #include <Arduino.h>            // Arduino Framework
 #define FASTLED_INTERNAL        // Suppress build banner
 #include <FastLED.h>
+#include "ledgfx.h"
+#include "comet.h"
+#include "marquee.h"
+#include "twinkle.h"
+#include "fader.h"
+#include "fire.h"
+//#include "bounce.h"     // Bounce ain't gonna work without a cock
 
 #define NUM_LEDS      200       // FastLED definitions
 #define LED_PIN       12        // Output pin of LED Strip
@@ -26,35 +33,19 @@
 
 CRGB g_LEDs[NUM_LEDS] = {0};    // Frame buffer for FastLED
 CRGBSet all_leds(g_LEDs, NUM_LEDS);
-/*
-CRGBSet first_leds(all_leds(0*(NUM_LEDS/4), (NUM_LEDS/4)-1));
-CRGBSet second_leds(all_leds(1*(NUM_LEDS/4), 2*(NUM_LEDS/4)-1));
-CRGBSet third_leds(all_leds(3*(NUM_LEDS/4), 4*(NUM_LEDS/4)-1));
-*/
-/**/
+
+static int g_Brightness = 128;
+static int g_PowerLimit = 4000;
+
 #define STRING_START 0
-#define FIRST_BREAK 25
-#define SECOND_BREAK 175
+#define FIRST_BREAK 45
+#define SECOND_BREAK 155
 #define STRING_END NUM_LEDS
 CRGBSet first_leds(all_leds(STRING_START, FIRST_BREAK));
 CRGBSet second_leds(all_leds(FIRST_BREAK+1, SECOND_BREAK));
 CRGBSet third_leds(all_leds(SECOND_BREAK+1, STRING_END));
-/**/
-static int g_Brightness = 128;
-static int g_PowerLimit = 3000;
 
-#include "ledgfx.h"
-#include "comet.h"
-#include "marquee.h"
-#include "twinkle.h"
-#include "fader.h"
-//#include "fire.h"
-//#include "fire2.h"
-//#include "bounce.h"     // Bounce ain't gonna work without a cock
-
-//static FireEffect_orig fire(NUM_LEDS-1);
-//static FireEffect fire1(NUM_LEDS/3-1, 0, 75, 100, 30, 10, true, false);
-//static FireEffect fire2(NUM_LEDS/4, NUM_LEDS/2, 250, 200, 30, 10, false, false);
+static FireEffect fire1(second_leds, 20, 100, 3, second_leds.len/4, false, false);
 
 void setup() 
 {
@@ -82,25 +73,27 @@ void DrawMarqueeComparison()
   static CRGB color2 = AllColors[random(0, ARRAYSIZE(AllColors))];
   for (float i = scroll; i < NUM_LEDS/2 - 1; i+= 5)
   {
-    DrawPixels(NUM_LEDS-1-i, 3, color1);
-    DrawPixels((int)i, 3, color2);
+    DrawPixels(first_leds, first_leds.len-1-i, 3, color1);
+    DrawPixels(first_leds, (int)i, 3, color2);
   }
 }
 
 void loop() 
 {
+  
 
   while (true)
   {
     EVERY_N_MILLISECONDS(PERIOD)
     {
       // Final Halloween Setup
-      DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::Green, 10);
-      twinkleBlur(third_leds, CRGB::Green, 4, 8);
+      //DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::Green, 10);
+      //twinkleBlur(third_leds, CRGB::Green, 4, 8);
+      fire1.DrawFire();
     }
     EVERY_N_MILLISECONDS(PERIOD)
     {
-      DrawComet(first_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
+      //DrawComet(first_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
     }
     FastLED.show(g_Brightness);
   }

@@ -53,7 +53,7 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
 
-  FastLED.addLeds<WS2812B, LED_PIN, GRB>(g_LEDs, NUM_LEDS);               // Add our LED strip to the FastLED library
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(g_LEDs, NUM_LEDS).setCorrection(0xFFB0F0);               // Add our LED strip to the FastLED library
   FastLED.setBrightness(g_Brightness);
   set_max_power_indicator_LED(LED_BUILTIN);                               // Light the builtin LED if we power throttle
   FastLED.setMaxPowerInMilliWatts(g_PowerLimit);                          // Set the power limit, above which brightness will be throttled
@@ -87,13 +87,13 @@ void loop()
     EVERY_N_MILLISECONDS(PERIOD)
     {
       // Final Halloween Setup
-      //DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::Green, 10);
-      //twinkleBlur(third_leds, CRGB::Green, 4, 8);
-      fire1.DrawFire();
+      DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::Green, 10);
+      twinkleBlur(third_leds, CRGB::Green, 4, 8);
+      //fire1.DrawFire();
     }
     EVERY_N_MILLISECONDS(PERIOD)
     {
-      //DrawComet(first_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
+      DrawComet(first_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
     }
     FastLED.show(g_Brightness);
   }

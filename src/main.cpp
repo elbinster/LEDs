@@ -24,7 +24,6 @@
 #include "twinkle.h"
 #include "fader.h"
 #include "fire.h"
-//#include "bounce.h"     // Bounce ain't gonna work without a cock
 
 #define NUM_LEDS      200       // FastLED definitions
 #define LED_PIN       12        // Output pin of LED Strip

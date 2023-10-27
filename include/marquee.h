@@ -1,6 +1,7 @@
 //+--------------------------------------------------------------------------
 //
 // NightDriver - (c) 2020 Dave Plummer.  All Rights Reserved.
+//    Modified by J.Elbin
 //
 // File:        marque.h
 //
@@ -9,6 +10,7 @@
 //   Draws a theatre-style marquee
 //
 // History:     Sep-15-2020     davepl      Created
+//              Oct-26-2023     jelbin      Customized
 //
 //---------------------------------------------------------------------------
 

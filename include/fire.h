@@ -1,12 +1,14 @@
 //+--------------------------------------------------------------------------
 //
 // NightDriver - (c) 2020 Dave Plummer.  All Rights Reserved.
+//    Modified by J.Elbin
 //
 // File:        fire.h                    
 //
 // Description: A realistic flame simulation for LED strips
 //
 // History:     Oct-23-2020     davepl      Created
+//              Oct-26-2023     jelbin      Customized
 //
 //---------------------------------------------------------------------------
 

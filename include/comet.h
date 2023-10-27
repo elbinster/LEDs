@@ -1,14 +1,16 @@
 //+--------------------------------------------------------------------------
 //
 // NightDriver - (c) 2020 Dave Plummer.  All Rights Reserved.
+//    Modified by J.Elbin
 //
 // File:                  
 //
 // Description:
-//
+//              Draws a light 'comet'
 //   
 //
 // History:     Sep-28-2020     davepl      Created
+//              Oct-26-2023     jelbin      Customized
 //
 //---------------------------------------------------------------------------
 

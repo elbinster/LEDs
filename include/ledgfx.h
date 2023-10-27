@@ -1,6 +1,7 @@
 //+--------------------------------------------------------------------------
 //
 // NightDriver - (c) 2018 Dave Plummer.  All Rights Reserved.
+//    Modified by J.Elbin
 //
 // File:        ledgfx.h
 //
@@ -9,6 +10,7 @@
 //   LED Drawing Routines for Dave's Garage Tutorial series
 //
 // History:     OCt-18-2020     davepl      Created from main.cpp code
+//              Oct-26-2023     jelbin      Customized
 //---------------------------------------------------------------------------
 
 #pragma once

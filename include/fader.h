@@ -1,6 +1,7 @@
 //+--------------------------------------------------------------------------
 //
 // NightDriver - (c) 2023 Jesse Elbin.  All Rights Reserved.
+//    Modified by J.Elbin
 //
 // File:        fdader.h
 //
@@ -9,6 +10,7 @@
 //   Draws a color fade
 //
 // History:     Oct-15-2023     jelbin      Created
+//              Oct-26-2023     jelbin      Customized
 //
 //---------------------------------------------------------------------------
 

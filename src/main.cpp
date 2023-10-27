@@ -26,25 +26,23 @@
 #include "fire.h"
 
 #define NUM_LEDS      200       // FastLED definitions
-#define LED_PIN       12        // Output pin of LED Strip
+#define LED_PIN       12        // Out+put pin of LED Strip
 #define FPS           60        // Ideal Frames per second
 #define PERIOD        1/FPS     // Ideal delay (doesn't account for processing delay)
 
 CRGB g_LEDs[NUM_LEDS] = {0};    // Frame buffer for FastLED
 CRGBSet all_leds(g_LEDs, NUM_LEDS);
 
-static int g_Brightness = 128;
+static int g_Brightness = 125;
 static int g_PowerLimit = 4000;
 
 #define STRING_START 0
-#define FIRST_BREAK 45
-#define SECOND_BREAK 155
+#define FIRST_BREAK 5
+#define SECOND_BREAK 45
 #define STRING_END NUM_LEDS
-CRGBSet first_leds(all_leds(STRING_START, FIRST_BREAK));
-CRGBSet second_leds(all_leds(FIRST_BREAK+1, SECOND_BREAK));
-CRGBSet third_leds(all_leds(SECOND_BREAK+1, STRING_END));
-
-static FireEffect fire1(second_leds, 20, 100, 3, second_leds.len/4, false, false);
+CRGBSet first_leds(all_leds(0, 38));
+CRGBSet second_leds(all_leds(46, 200));
+CRGBSet third_leds(all_leds(151, 200));
 
 void setup() 
 {
@@ -60,39 +58,33 @@ void setup()
   FastLED.show();
 }
 
-void DrawMarqueeComparison()
-{
-  FastLED.clear();
-  static float scroll = 0.0f;
-  scroll += 0.1f;
-  if (scroll > 5.0)
-    scroll -= 5.0;
-
-  static CRGB color1 = AllColors[random(0, ARRAYSIZE(AllColors))];
-  static CRGB color2 = AllColors[random(0, ARRAYSIZE(AllColors))];
-  for (float i = scroll; i < NUM_LEDS/2 - 1; i+= 5)
-  {
-    DrawPixels(first_leds, first_leds.len-1-i, 3, color1);
-    DrawPixels(first_leds, (int)i, 3, color2);
-  }
-}
-
 void loop() 
 {
-  
-
+/*  
+FireEffect(
+  CRGBSet leds, 
+  int cooling = 20, 
+  uint8_t sparking = 100, 
+  int sparks = 3, 
+  int sparkHeight = 4, 
+  bool breversed = true, 
+  bool bmirrored = true)
+*/
+  static FireEffect fire1(all_leds, 10, 100, 2, all_leds.len/2, false, true);
   while (true)
   {
     EVERY_N_MILLISECONDS(PERIOD)
     {
       // Final Halloween Setup
-      DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::Green, 10);
-      twinkleBlur(third_leds, CRGB::Green, 4, 8);
-      //fire1.DrawFire();
+      DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::OrangeRed, 10);
+
+      ////twinkleBlur(third_leds, CRGB::Green, 4, 8);
+      ////fire1.DrawFire();
     }
     EVERY_N_MILLISECONDS(PERIOD)
     {
       DrawComet(first_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
+      //DrawComet(all_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
     }
     FastLED.show(g_Brightness);
   }

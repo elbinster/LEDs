@@ -25,7 +25,7 @@ class FireEffect
     int     Cooling;            // Rate at which the pixels cool off
     int     Sparks;             // How many sparks will be attempted each frame
     int     SparkHeight;        // If created, max height for a spark
-    int     Sparking;           // Probability of a spark each attempt
+    uint8_t Sparking;           // Probability of a spark each attempt
     bool    bReversed;          // If reversed we draw from 0 outwards
     bool    bMirrored;          // If mirrored we split and duplicate the drawing
 
@@ -42,7 +42,7 @@ class FireEffect
 
   public:
 
-    FireEffect(CRGBSet leds, int cooling = 20, int sparking = 100, int sparks = 3, int sparkHeight = 4, bool breversed = true, bool bmirrored = true)
+    FireEffect(CRGBSet leds, int cooling = 20, uint8_t sparking = 100, int sparks = 3, int sparkHeight = 4, bool breversed = true, bool bmirrored = true)
         : Leds(leds),
           Cooling(cooling),
           Sparks(sparks),
@@ -101,7 +101,7 @@ class FireEffect
         }
 
         // Finally, convert heat to a color
-
+        Leds.fadeToBlackBy(64);
         for (int i = 0; i < Size; i++)
         {
             CRGB color = HeatColor(heat[i]);
@@ -113,5 +113,6 @@ class FireEffect
                 DrawPixels(Leds, pixelToDraw, 1, color);
             }
         }
+        delay(40);
     }
 };

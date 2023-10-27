@@ -78,14 +78,14 @@ FireEffect(
     EVERY_N_MILLISECONDS(PERIOD)
     {
       // Final Halloween Setup
-      //DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::OrangeRed, 10);
+      DrawTwoColorFade(second_leds, CRGB::Purple, CRGB::OrangeRed, 10);
 
-      twinkleBlur(all_leds, CRGB::Green, 4, 8);
+      ////twinkleBlur(all_leds, CRGB::Green, 4, 8);
       ////fire1.DrawFire();
     }
     EVERY_N_MILLISECONDS(PERIOD)
     {
-      //DrawComet(first_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
+      DrawComet(first_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
       //DrawComet(all_leds, 128, 3, CRGB::Orange, CRGB::OrangeRed);
     }
     FastLED.show(g_Brightness);
